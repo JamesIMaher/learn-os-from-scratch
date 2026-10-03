@@ -1,0 +1,5 @@
+# Used by: gdb -x tools/gdbinit build/kernel.elf   (see docs/debugging.md)
+set architecture i386
+set disassembly-flavor intel
+target remote localhost:1234
+layout split
