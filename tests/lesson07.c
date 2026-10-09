@@ -6,7 +6,7 @@
 /* Collect up to n characters, giving up after `ms` milliseconds. */
 static int collect(char *out, int n, uint32_t ms)
 {
-    uint64_t end = timer_ticks() + (uint64_t)ms * timer_hz() / 1000;
+    uint64_t end = timer_ticks() + ms * timer_hz() / 1000;   /* 32-bit math: no libgcc needed */
     int got = 0;
     while (got < n && timer_ticks() < end) {
         int c = keyboard_getchar();

@@ -36,6 +36,11 @@ CFLAGS := -m32 -std=gnu11 -O2 -g \
 ASFLAGS := -f elf32 -g -F dwarf
 LDFLAGS := -m elf_i386 -nostdlib $(shell $(LD) --help 2>/dev/null | grep -q no-warn-execstack && echo --no-warn-execstack)
 LIBGCC  := $(shell $(CC) -m32 -print-libgcc-file-name)
+# libgcc provides helpers like __udivdi3 (64-bit division on a 32-bit CPU).
+# If yours isn't a 32-bit one, the linker silently skips it. Say so loudly.
+ifeq ($(shell objdump -f $(LIBGCC) 2>/dev/null | grep -m1 -c 'elf32-i386'),0)
+  $(warning $(LIBGCC) is not a 32-bit libgcc. On Debian/Ubuntu: sudo apt install gcc-multilib)
+endif
 
 BUILD := build
 

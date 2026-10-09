@@ -65,7 +65,7 @@ bool t_wait_flag(volatile int *flag, uint32_t ms)
 {
     uint64_t start = timer_ticks();
     uint32_t hz = timer_hz() ? timer_hz() : 100;
-    uint64_t limit = (uint64_t)ms * hz / 1000 + 1;
+    uint64_t limit = ms * hz / 1000 + 1;   /* 32-bit math: no libgcc needed */
     for (uint32_t spins = 0; !*flag; spins++) {
         if (timer_ticks() - start > limit) return false;
         if (spins > 400000000u) return false;    /* timer broken? don't hang */
